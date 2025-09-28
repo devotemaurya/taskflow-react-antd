@@ -1,73 +1,197 @@
-# Welcome to your Lovable project
+# Task Management Frontend
 
-## Project info
+A complete React 19 + TypeScript + Ant Design frontend application for managing and executing tasks through a REST API.
 
-**URL**: https://lovable.dev/projects/f84940bf-5cc7-4727-a4bc-5f6326192444
+## Features
 
-## How can I edit this code?
+- 📋 **Task List**: View all tasks in a clean, organized table
+- 🔍 **Search**: Filter tasks by name with real-time search
+- ➕ **Create Tasks**: Add new tasks with name, command, and description
+- ▶️ **Execute Tasks**: Run task commands and view output in real-time
+- 🗑️ **Delete Tasks**: Remove tasks with confirmation dialog
+- 🔄 **Real-time Updates**: Automatic refresh after operations
+- 📱 **Responsive Design**: Works on desktop and mobile devices
+- ⚡ **Loading States**: Visual feedback for all operations
+- 🚨 **Error Handling**: User-friendly error messages
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **React 19** with TypeScript
+- **Ant Design** for UI components
+- **Axios** for API communication
+- **Vite** for build tooling
+- **Tailwind CSS** for styling
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f84940bf-5cc7-4727-a4bc-5f6326192444) and start prompting.
+## Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 18+ and npm
+- Task Management API running (see API Requirements below)
 
-**Use your preferred IDE**
+## Installation & Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd task-management-frontend
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Follow these steps:
+3. **Environment Configuration**
+   
+   Create a `.env` file in the root directory:
+   ```env
+   VITE_API_BASE_URL=http://localhost:3000/api
+   ```
+   
+   Replace the URL with your actual API base URL.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+5. **Open your browser**
+   
+   Navigate to `http://localhost:8080` to view the application.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Available Scripts
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## API Requirements
+
+The application expects a REST API with the following endpoints:
+
+### Get Tasks
+```
+GET /tasks
+GET /tasks?name=<search_term>
+```
+Response: Array of task objects
+
+### Create Task
+```
+PUT /tasks
+Content-Type: application/json
+
+{
+  "name": "Task Name",
+  "command": "npm test", 
+  "description": "Optional description"
+}
+```
+Response: Created task object
+
+### Delete Task
+```
+DELETE /tasks/:id
+```
+Response: 204 No Content
+
+### Execute Task
+```
+PUT /tasks/:id/execution
+```
+Response: 
+```json
+{
+  "output": "Command output text",
+  "exitCode": 0,
+  "executedAt": "2023-12-01T10:00:00Z"
+}
 ```
 
-**Edit a file directly in GitHub**
+### Task Object Structure
+```typescript
+interface Task {
+  id: string;
+  name: string;
+  command: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
+```
+src/
+├── components/           # React components
+│   ├── TaskForm.tsx     # Task creation form
+│   └── TaskList.tsx     # Task list and management
+├── services/            # API services
+│   └── api.ts          # Axios configuration and API calls
+├── pages/              # Page components
+│   └── Index.tsx       # Main application page
+└── ...
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Key Features Explained
 
-## What technologies are used for this project?
+### Task Management Table
+- Displays all tasks with name, command, description, and creation date
+- Sortable columns and pagination
+- Search functionality with debounced input
+- Action buttons for execute and delete operations
 
-This project is built with:
+### Task Creation Form
+- Validates input fields (required fields, length limits)
+- Real-time character counting
+- Auto-resets after successful creation
+- Displays success/error messages
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Task Execution
+- Executes task commands via API
+- Shows loading state during execution
+- Displays results in a modal with:
+  - Exit code (with color coding for success/failure)
+  - Execution timestamp
+  - Command output in terminal-style format
 
-## How can I deploy this project?
+### Error Handling
+- Network request failures
+- API validation errors
+- Loading states for all operations
+- User-friendly error messages
 
-Simply open [Lovable](https://lovable.dev/projects/f84940bf-5cc7-4727-a4bc-5f6326192444) and click on Share -> Publish.
+## Environment Variables
 
-## Can I connect a custom domain to my Lovable project?
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Base URL for the task management API | `http://localhost:3000/api` |
 
-Yes, you can!
+## Development
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. **Code Style**: Uses ESLint and TypeScript strict mode
+2. **Components**: Functional components with React hooks
+3. **State Management**: React hooks (useState, useEffect, useCallback)
+4. **API Layer**: Centralized in `services/api.ts` with proper TypeScript interfaces
+5. **Styling**: Ant Design components with Tailwind CSS utilities
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Building for Production
+
+```bash
+npm run build
+```
+
+The build artifacts will be stored in the `dist/` directory.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
